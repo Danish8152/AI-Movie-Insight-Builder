@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "../style/Movies.css"
 
 function MovieDetails() {
     const { imdbId } = useParams();
@@ -13,10 +14,10 @@ function MovieDetails() {
 
                 console.log("Status:", res.status);
 
-                const text = await res.text();   // read as text first
+                const text = await res.text();
                 console.log("Raw response:", text);
 
-                const data = JSON.parse(text);   // manually parse
+                const data = JSON.parse(text);
 
                 setMovie(data);
             } catch (err) {
@@ -32,12 +33,57 @@ function MovieDetails() {
     if (!movie) return <h2 style={{ color: "white" }}>Loading...</h2>;
 
     return (
-        <div style={{ padding: "40px", color: "white" }}>
-            <h1>{movie.title}</h1>
-            <img src={movie.poster} alt={movie.title} />
-            <h3>{movie.year}</h3>
-            <h3>{movie.rating}</h3>
-            <p>{movie.plot}</p>
+        <div className="movie-details">
+            <div className="movie-top">
+                <img
+                    src={movie.poster}
+                    alt={movie.title}
+                    className="movie-poster"
+                />
+
+                <div className="movie-info">
+                    <h1 className="movie-title">{movie.title}</h1>
+
+                    <div className="movie-meta">
+                        <span>{movie.year}</span>
+                        <span className="movie-rating">⭐ {movie.rating}</span>
+                    </div>
+
+                    <p className="movie-plot">{movie.plot}</p>
+                    <div className="sentiment-box">
+                        <h3 className="sentiment-title">Audience Sentiment</h3>
+
+                        <p className="sentiment-summary">
+                            {movie.sentiment?.summary}
+                        </p>
+
+                        <span
+                            className={`sentiment-badge ${movie.sentiment?.overall?.toLowerCase()
+                                }`}
+                        >
+                            Overall audience sentiment is {movie.sentiment?.overall}
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <h2 className="cast-title">Cast</h2>
+
+            <div className="cast-grid">
+                {movie.cast &&
+                    movie.cast.map((actor) => (
+                        <div key={actor.name} className="cast-card">
+                            <img
+                                src={actor.profile}
+                                alt={actor.name}
+                                className="cast-image"
+                            />
+                            <h4 className="cast-name">{actor.name}</h4>
+                            <p className="cast-role">{actor.character}</p>
+                        </div>
+                    ))}
+            </div>
         </div>
     );
 }
