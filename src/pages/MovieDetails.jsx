@@ -9,9 +9,7 @@ function MovieDetails() {
     useEffect(() => {
         async function fetchMovie() {
             try {
-                const res = await fetch(
-                    `https://ai-movie-insight-builder-backend-1.onrender.com/movie/${imdbId}`
-                );
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/movie/${imdbId}`);
 
                 console.log("Status:", res.status);
 
